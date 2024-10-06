@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.crawl = crawl;
+exports.crawl2 = crawl2;
 const puppeteer_1 = require("puppeteer");
 const i_name = '최원진';
 const i_birth = '19940805';
 const i_phone = '27721491';
 const i_auth_target = "카카오톡";
 const headless = false;
+let session = null;
 async function crawl() {
     const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36';
     const browser = await puppeteer_1.default.launch({ headless });
@@ -42,6 +44,15 @@ async function crawl() {
         document.querySelector('#oacx-request-btn-pc').click();
         document.querySelector('#oacx-request-btn-pc').dispatchEvent(clickEvent);
     });
+    session = page;
 }
 ;
+async function crawl2() {
+    const page = session;
+    if (page === null) {
+        return null;
+    }
+    await page.click('xpath=//*[@id="oacxEmbededContents"]/div[1]/div/button[2]');
+    await page.goto('https://www.nhis.or.kr/nhis/healthin/retrieveHealthinCheckUpTargetResultPerson.do');
+}
 //# sourceMappingURL=app.function.js.map

@@ -1,5 +1,4 @@
-import puppeteer from 'puppeteer'
-import whisper from 'whisper-node';
+import puppeteer, { Page } from 'puppeteer'
 
 
 const i_name = '최원진';
@@ -7,6 +6,8 @@ const i_birth = '19940805';
 const i_phone = '27721491';
 const i_auth_target = "카카오톡"
 const headless = false
+
+let session: Page = null
 
 
 export async function crawl() {
@@ -56,5 +57,21 @@ export async function crawl() {
         document.querySelector<HTMLButtonElement>('#oacx-request-btn-pc').click()
         document.querySelector('#oacx-request-btn-pc').dispatchEvent(clickEvent)
     });
+    session = page
 };
 
+
+
+
+export async function crawl2() {
+    const page = session
+    if (page === null) {
+        return null
+    }
+
+    await page.click('xpath=//*[@id="oacxEmbededContents"]/div[1]/div/button[2]')
+    await page.goto('https://www.nhis.or.kr/nhis/healthin/retrieveHealthinCheckUpTargetResultPerson.do');
+
+
+
+}

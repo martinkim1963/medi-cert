@@ -6,14 +6,15 @@ export declare class AppController {
     constructor(appService: AppService, prisma: PrismaService);
     getHello(): string;
     getCrawl(): Promise<string>;
+    getCrawl2(): Promise<string>;
     login(): Promise<{
-        code: string;
         name: string;
+        code: string;
         id: number;
     }>;
     cert(): Promise<{
-        code: string;
         name: string;
+        code: string;
         id: number;
     }[]>;
     readAudio(): Promise<string>;
