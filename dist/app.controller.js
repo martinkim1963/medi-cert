@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const prisma_service_1 = require("./prisma.service");
 const whisper_node_1 = require("whisper-node");
+const path_1 = require("path");
 let AppController = class AppController {
     constructor(appService, prisma) {
         this.appService = appService;
@@ -27,21 +28,8 @@ let AppController = class AppController {
         return this.appService.getHello();
     }
     async getCrawl2() {
-        const rand = await this.appService.crawl2();
-        const options = {
-            modelName: "small",
-            whisperOptions: {
-                language: 'ko',
-                gen_file_txt: false,
-                gen_file_subtitle: false,
-                gen_file_vtt: false,
-                word_timestamps: true
-            }
-        };
-        const transcript = await (0, whisper_node_1.default)(`https://www.nhis.or.kr/cms/captcha/audio.do?lan=kor&rand=${rand}`, options);
-        const code = transcript.filter(t => t.speech !== '-').map(c => c.speech).join('');
-        console.log({ code });
-        return code;
+        const rand = await this.appService.crawl3();
+        return rand;
     }
     async login() {
         const result = await this.prisma.user.create({
@@ -57,8 +45,11 @@ let AppController = class AppController {
         return result;
     }
     async readAudio() {
+        const audioPath = (0, path_1.resolve)(__dirname, '../audio');
+        console.log({ audioPath });
         const options = {
-            modelName: "small",
+            withCuda: false,
+            modelName: "medium",
             whisperOptions: {
                 language: 'ko',
                 gen_file_txt: false,
@@ -67,7 +58,8 @@ let AppController = class AppController {
                 word_timestamps: true
             }
         };
-        const transcript = await (0, whisper_node_1.default)("/Users/choewonjin/Desktop/medi-cert/audio/korean.wav", options);
+        const transcript = await (0, whisper_node_1.default)(`${audioPath}/korean2.wav --no-gpu`, { ...options });
+        console.log({ transcript });
         const code = transcript.filter(t => t.speech !== '-').map(c => c.speech).join('');
         console.log({ code });
         return code;

@@ -8,13 +8,13 @@ export declare class AppController {
     getCrawl(): Promise<string>;
     getCrawl2(): Promise<string>;
     login(): Promise<{
-        name: string;
         code: string;
+        name: string;
         id: number;
     }>;
     cert(): Promise<{
-        name: string;
         code: string;
+        name: string;
         id: number;
     }[]>;
     readAudio(): Promise<string>;

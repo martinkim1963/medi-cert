@@ -20,10 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "pnpx prisma migrate dev --name init",
     "generate": "pnpx prisma generate",
-    "download-whisper":"pnpx whisper-node download",
-    "---":"small 설치 할것"
+    "download-whisper": "pnpx whisper-node download",
+    "---": "small 설치 할것"
   },
-  
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",

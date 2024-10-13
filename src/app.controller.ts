@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { crawl, crawl2 } from './app.function';
 import { PrismaService } from './prisma.service';
 import whisper from 'whisper-node';
+import { resolve } from 'path';
 
 @Controller()
 export class AppController {
@@ -21,23 +22,27 @@ export class AppController {
 
   @Get("crawl2")
   async getCrawl2() {
-    const rand = await this.appService.crawl2()
-    const options = {
-      modelName: "small",       // default
-      // modelPath: "/custom/path/to/model.bin", // use model in a custom directory (cannot use along with 'modelName')
-      whisperOptions: {
-        language: 'ko',         // default (use 'auto' for auto detect
-        gen_file_txt: false,      // outputs .txt file
-        gen_file_subtitle: false, // outputs .srt file
-        gen_file_vtt: false,      // outputs .vtt file
-        word_timestamps: true     // timestamp for every word
-      }
-    }
+    const rand = await this.appService.crawl3()
+    return rand
+    // const options = {
+    //   withCuda: false,
+    //   removeWavFileAfterTranscription: false,
+    //   modelName: "small",       // default
+    //   // modelPath: "/custom/path/to/model.bin", // use model in a custom directory (cannot use along with 'modelName')
+    //   whisperOptions: {
+    //     language: 'ko',         // default (use 'auto' for auto detect
+    //     gen_file_txt: false,      // outputs .txt file
+    //     gen_file_subtitle: false, // outputs .srt file
+    //     gen_file_vtt: false,      // outputs .vtt file
+    //     word_timestamps: true     // timestamp for every word
 
-    const transcript = await whisper(`https://www.nhis.or.kr/cms/captcha/audio.do?lan=kor&rand=${rand}`, options) as { start: string, end: string, speech: string }[]
-    const code = transcript.filter(t => t.speech !== '-').map(c => c.speech).join('')
-    console.log({ code })
-    return code
+    //   }
+    // }
+
+    // const transcript = await whisper(`https://www.nhis.or.kr/cms/captcha/audio.do?lan=kor&rand=${rand}`, options) as { start: string, end: string, speech: string }[]
+    // const code = transcript.filter(t => t.speech !== '-').map(c => c.speech).join('')
+    // console.log({ code })
+    // return code
   }
 
 
@@ -60,8 +65,13 @@ export class AppController {
 
   @Get("audio")
   async readAudio() {
+
+    const audioPath = resolve(__dirname, '../audio');
+    console.log({ audioPath })
+
     const options = {
-      modelName: "small",       // default
+      withCuda: false,
+      modelName: "medium",       // default
       // modelPath: "/custom/path/to/model.bin", // use model in a custom directory (cannot use along with 'modelName')
       whisperOptions: {
         language: 'ko',         // default (use 'auto' for auto detect
@@ -69,10 +79,12 @@ export class AppController {
         gen_file_subtitle: false, // outputs .srt file
         gen_file_vtt: false,      // outputs .vtt file
         word_timestamps: true     // timestamp for every word
+
       }
     }
 
-    const transcript = await whisper("/Users/choewonjin/Desktop/medi-cert/audio/korean.wav", options) as { start: string, end: string, speech: string }[]
+    const transcript = await whisper(`${audioPath}/korean2.wav --no-gpu`, { ...options }) as { start: string, end: string, speech: string }[]
+    console.log({ transcript })
     const code = transcript.filter(t => t.speech !== '-').map(c => c.speech).join('')
     console.log({ code })
     return code
