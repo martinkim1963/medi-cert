@@ -13,6 +13,7 @@ const whisper_node_1 = require("whisper-node");
 const fs_1 = require("fs");
 const path_1 = require("path");
 const url_1 = require("url");
+const fast_xml_parser_1 = require("fast-xml-parser");
 const i_name = '최원진';
 const i_birth = '19940805';
 const i_phone = '27721491';
@@ -127,7 +128,9 @@ let AppService = class AppService {
             });
             return await response.text();
         });
-        return XmlString;
+        const parser = new fast_xml_parser_1.XMLParser();
+        let jObj = parser.parse(XmlString);
+        return jObj;
     }
     async crawl2() {
         const page = this.session;

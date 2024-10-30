@@ -4,6 +4,44 @@ import whisper from 'whisper-node';
 import { mkdirSync, writeFileSync, existsSync, statSync } from 'fs'
 import { resolve, basename } from 'path'
 import { parse } from 'url'
+import { XMLParser, XMLBuilder, XMLValidator } from "fast-xml-parser"
+
+
+/**
+ * 
+ * 
+ * 
+
+
+
+검진년도
+검진일자
+
+신장
+체중
+허리둘레
+체질량지수
+시력(좌/우)
+청력(좌/우)
+
+
+혈압(수축기혈압/확장기혈압)
+요단백
+혈색소
+공복혈당
+신전혈당
+총콜레스테롤
+HDL콜레스테롤
+혈청크레아티닌
+신사구체여과율(GFR)
+AST(SGOT)
+ALT(SGPT)
+감마지피티(y-GPT)
+골다공증
+
+
+
+ */
 
 
 const i_name = '최원진';
@@ -139,7 +177,7 @@ export class AppService {
     }
     await page.click('xpath=//*[@id="oacxEmbededContents"]/div[1]/div/button[2]')
     await page.waitForNavigation()
-    
+
     const XmlString = await page.evaluate(async () => {
       const response = await fetch('https://www.nhis.or.kr/nhis/healthin/retrieveCrryy10Dnlod.do', {
         method: 'GET',
@@ -148,7 +186,15 @@ export class AppService {
       return await response.text();
     });
 
-    return XmlString
+
+    const parser = new XMLParser();
+    let jObj = parser.parse(XmlString);
+
+    // const builder = new XMLBuilder();
+    // const xmlContent = builder.build(jObj);
+    
+
+    return jObj
   }
 
 

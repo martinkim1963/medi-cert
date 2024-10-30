@@ -6,7 +6,7 @@ export declare class AppController {
     constructor(appService: AppService, prisma: PrismaService);
     getHello(): string;
     getCrawl(): Promise<string>;
-    getCrawl2(): Promise<string>;
+    getCrawl2(): Promise<any>;
     login(): Promise<{
         code: string;
         name: string;
